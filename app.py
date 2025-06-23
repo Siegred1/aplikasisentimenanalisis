@@ -3,6 +3,7 @@ import pickle
 import re
 import string
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
+import nltk
 from nltk.corpus import stopwords
 
 # Load model dan TF-IDF vectorizer
@@ -18,7 +19,11 @@ df_kamus = pd.read_excel('kamusbakutidakbakufix.xlsx')
 kamus_normalisasi = dict(zip(df_kamus['tidakbaku'], df_kamus['baku']))
 
 # Preprocessing
-stop_words = set(stopwords.words('indonesian'))
+try:
+    stop_words = set(stopwords.words('indonesian'))
+except LookupError:
+    nltk.download('stopwords')
+    stop_words = set(stopwords.words('indonesian'))
 stemmer = StemmerFactory().create_stemmer()
 
 def clean_tweet(tweet):
